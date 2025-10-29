@@ -130,6 +130,7 @@ MIT License © 2025 klokom
 
 ## Roadmap
 
+- [ ] Local Caching
 - [ ] Add macOS (brew) support  
 - [ ] Add openSUSE (zypper) support  
 - [ ] Optional non-interactive mode for automation  
