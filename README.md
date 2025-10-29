@@ -144,5 +144,3 @@ GPL-3.0 license © 2025 klokom
 - [ ] Optional non-interactive mode for automation  
 - [ ] Version check and self-update utility  
 - [ ] Plugin-style architecture for other managers (flatpak, snap, pip)
-
-> "Because searching and installing packages should be fuzzy, not frustrating."
