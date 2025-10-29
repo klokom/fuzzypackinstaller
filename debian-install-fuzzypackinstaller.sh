@@ -84,18 +84,16 @@ printf '%s\n' "${ALL_PKGS[@]}" | \
       # hard repaint: clear screen + scrollback, move cursor home
       printf \"\033[2J\033[3J\033[H\" > /dev/tty
     '
-)"
-
-
---bind "ctrl-s:execute(
-    $BASH_BIN -lc '
-    set +u
-    sel=( {+} )
-    [[ \${#sel[@]} -gt 0 ]] || exit 0
-    sudo apt install -y \"\${sel[@]}\" < /dev/tty
-    echo; echo \"✔ Installed: \${sel[*]}\"; echo \"(Press any key to continue)\"; read -n1 < /dev/tty
-    # hard repaint before returning to fzf
-    printf \"\033[2J\033[3J\033[H\" > /dev/tty
+)" \
+    --bind "ctrl-s:execute(
+      $BASH_BIN -lc '
+      set +u
+      sel=( {+} )
+      [[ \${#sel[@]} -gt 0 ]] || exit 0
+      sudo apt install -y \"\${sel[@]}\" < /dev/tty
+      echo; echo \"✔ Installed: \${sel[*]}\"; echo \"(Press any key to continue)\"; read -n1 < /dev/tty
+      # hard repaint before returning to fzf
+      printf \"\033[2J\033[3J\033[H\" > /dev/tty
   '
 )+clear-selection"
 
