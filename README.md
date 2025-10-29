@@ -16,6 +16,7 @@ Once installed, you can open a fuzzy search menu and install packages directly f
 - Installs native repo pickers
   - pkg-install for official repositories
   - pkg-aur-install (on Arch) for AUR
+- Installs optional snap and flapak pickers
 - Interactive fzf interface
   - Multi-select (TAB/SPACE)
   - Live search + preview
@@ -44,6 +45,7 @@ The script will:
 4. Check if that directory is in your PATH.
 5. Verify or install fzf (with fallback options if not in repos).
 6. Install the fuzzy picker(s) and show usage instructions.
+7. Give option to install snap and flatpak picker.
 
 ## Supported Platforms
 
@@ -55,7 +57,7 @@ The script will:
 
 ## After Installation
 
-Once installed, two new commands become available (depending on your OS):
+Once installed, two new commands become available (depending on your OS) plus two optional extras:
 
 ### Arch-based systems
 ```bash
@@ -72,6 +74,12 @@ pkg-install        # Browse & install packages from apt
 ```bash
 pkg-install        # Browse & install packages from dnf/yum
 ```
+### Extras
+```bash
+pkg-snap-install        # Browse & install snaps from snapcraft
+pkg-flatpak-install        # Browse & install flatpaks from flathub
+```
+
 
 ## Keybindings in the Fuzzy Picker
 
@@ -100,7 +108,7 @@ The Fedora installer offers three fallback options:
 If you want to update or remove the scripts:
 
 ```bash
-sudo rm -f /usr/local/bin/pkg-install /usr/local/bin/pkg-aur-install
+sudo rm -f /usr/local/bin/pkg-install /usr/local/bin/pkg-aur-install /usr/local/bin/pkg-flatpak-install /usr/local/bin/pkg-snap-install
 git pull
 ./install-fuzzypackinstaller.sh
 ```
