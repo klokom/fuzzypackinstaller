@@ -126,7 +126,7 @@ Enter choice [1/2/3]:
 
 ## License
 
-MIT License © 2025 klokom
+GPL-3.0 license © 2025 klokom
 
 ## Roadmap
 
