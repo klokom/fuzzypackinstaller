@@ -88,7 +88,7 @@ ensure_snapd() {
 
   echo "=> Installing snapd..."
   case "$PKG_MGR" in
-    pacman) 
+    pacman) \
         if command -v paru >/dev/null 2>&1; then
           paru -S --needed snapd
         elif command -v yay >/dev/null 2>&1; then
