@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# =========================
-# Prompt: destination dir
-# =========================
+
 DEFAULT_DEST="/usr/local/bin"
 read -r -p "Install scripts to which directory? [${DEFAULT_DEST}] " DEST
 DEST="${DEST:-$DEFAULT_DEST}"
 echo "=> Using destination: $DEST"
 
-# Ensure destination
+
 if [[ ! -d "$DEST" ]]; then
   echo "=> Creating $DEST (sudo may be required)"
   sudo mkdir -p "$DEST"
 fi
 
-# PATH check
+
 IN_PATH="no"
 IFS=':' read -r -a PATH_ARR <<< "$PATH"
 for p in "${PATH_ARR[@]}"; do
@@ -28,9 +26,7 @@ if [[ "$IN_PATH" != "yes" ]]; then
   echo "   Fish:  set -Ux fish_user_paths $DEST \$fish_user_paths"
 fi
 
-# =========================
-# Dependencies (Arch/CachyOS)
-# =========================
+
 if command -v pacman >/dev/null 2>&1; then
   need_pkgs=()
   command -v fzf >/dev/null 2>&1 || need_pkgs+=(fzf)
@@ -43,9 +39,7 @@ else
   echo "ℹ️  Non-Arch system detected. Please install 'fzf' manually."
 fi
 
-# =========================
-# Offer to install paru/yay
-# =========================
+
 install_aur_helper() {
   local choice tmpdir repo
   echo
@@ -57,7 +51,7 @@ install_aur_helper() {
     return 0
   fi
 
-  # Ask which helper
+
   read -r -p "Which helper? [paru/yay] (default: paru) " choice
   choice=${choice:-paru}
   if [[ "$choice" != "paru" && "$choice" != "yay" ]]; then
@@ -65,11 +59,11 @@ install_aur_helper() {
     return 1
   fi
 
-  # Ensure base-devel + git
+
   echo "=> Installing prerequisites: base-devel git"
   sudo pacman -S --needed base-devel git
 
-  # Build from AUR
+
   tmpdir="$(mktemp -d)"
   trap 'rm -rf "$tmpdir"' RETURN
   pushd "$tmpdir" >/dev/null
@@ -99,13 +93,10 @@ if ! command -v paru >/dev/null 2>&1 && ! command -v yay >/dev/null 2>&1; then
   fi
 fi
 
-# =========================
-# Generate scripts
-# =========================
+
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
-# --- pkg-install (repos) ---
 cat > "$TMP_DIR/pkg-install" <<'PKG_INSTALL_EOF'
 #!/usr/bin/env bash
 set -Eeuo pipefail
@@ -174,7 +165,6 @@ printf '%s\n' "${ALL_PKGS[@]}" | \
     )+clear-selection"
 PKG_INSTALL_EOF
 
-# --- pkg-aur-install (AUR) ---
 cat > "$TMP_DIR/pkg-aur-install" <<'PKG_AUR_INSTALL_EOF'
 #!/usr/bin/env bash
 set -Eeuo pipefail
@@ -262,9 +252,7 @@ printf '%s\n' "${ALL_PKGS[@]}" | \
     )+clear-selection"
 PKG_AUR_INSTALL_EOF
 
-# =========================
-# Install scripts
-# =========================
+
 echo "=> Installing scripts to $DEST"
 sudo install -Dm755 "$TMP_DIR/pkg-install"      "$DEST/pkg-install"
 sudo install -Dm755 "$TMP_DIR/pkg-aur-install"  "$DEST/pkg-aur-install"
