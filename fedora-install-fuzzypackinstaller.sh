@@ -206,6 +206,7 @@ printf '%s\n' "${ALL_PKGS[@]}" | \
         cur=\"\${cur_raw%% *}\"
         sudo $MGR install -y \"\$cur\" < /dev/tty
         echo; echo \"✔ Installed: \$cur\"; echo \"(Press any key to continue)\"; read -n1 < /dev/tty
+        printf \"\033[2J\033[3J\033[H\" > /dev/tty
       '
     )" \
     --bind "ctrl-s:execute(
@@ -215,6 +216,7 @@ printf '%s\n' "${ALL_PKGS[@]}" | \
         [[ \${#sel[@]} -gt 0 ]] || exit 0
         sudo $MGR install -y \"\${sel[@]}\" < /dev/tty
         echo; echo \"✔ Installed: \${sel[*]}\"; echo \"(Press any key to continue)\"; read -n1 < /dev/tty
+        printf \"\033[2J\033[3J\033[H\" > /dev/tty
       '
     )+clear-selection"
 PKG_INSTALL_EOF
