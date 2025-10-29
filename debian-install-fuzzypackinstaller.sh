@@ -96,6 +96,7 @@ printf '%s\n' "${ALL_PKGS[@]}" | \
       printf \"\033[2J\033[3J\033[H\" > /dev/tty
   '
 )+clear-selection"
+PKG_INSTALL_EOF
 
 echo "=> Installing pkg-install to $DEST"
 sudo install -Dm755 "$TMP_DIR/pkg-install" "$DEST/pkg-install"
