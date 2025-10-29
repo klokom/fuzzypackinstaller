@@ -75,24 +75,29 @@ printf '%s\n' "${ALL_PKGS[@]}" | \
     --bind "ctrl-r:reload($(declare -f build_index); build_index)" \
     --bind "enter:execute(
       $BASH_BIN -lc '
-        set +u
-        cur_raw=\"{}\"
-        [[ -n \"\${cur_raw-}\" ]] || exit 0
-        cur=\"\${cur_raw%% *}\"
-        sudo apt install -y \"\$cur\" < /dev/tty
-        echo; echo \"✔ Installed: \$cur\"; echo \"(Press any key to continue)\"; read -n1 < /dev/tty
-      '
-    )" \
-    --bind "ctrl-s:execute(
-      $BASH_BIN -lc '
-        set +u
-        sel=( {+} )
-        [[ \${#sel[@]} -gt 0 ]] || exit 0
-        sudo apt install -y \"\${sel[@]}\" < /dev/tty
-        echo; echo \"✔ Installed: \${sel[*]}\"; echo \"(Press any key to continue)\"; read -n1 < /dev/tty
-      '
-    )+clear-selection"
-PKG_INSTALL_EOF
+      set +u
+      cur_raw=\"{}\"
+      [[ -n \"\${cur_raw-}\" ]] || exit 0
+      cur=\"\${cur_raw%% *}\"
+      sudo apt install -y \"\$cur\" < /dev/tty
+      echo; echo \"✔ Installed: \$cur\"; echo \"(Press any key to continue)\"; read -n1 < /dev/tty
+      # hard repaint: clear screen + scrollback, move cursor home
+      printf \"\033[2J\033[3J\033[H\" > /dev/tty
+    '
+)"
+
+
+--bind "ctrl-s:execute(
+    $BASH_BIN -lc '
+    set +u
+    sel=( {+} )
+    [[ \${#sel[@]} -gt 0 ]] || exit 0
+    sudo apt install -y \"\${sel[@]}\" < /dev/tty
+    echo; echo \"✔ Installed: \${sel[*]}\"; echo \"(Press any key to continue)\"; read -n1 < /dev/tty
+    # hard repaint before returning to fzf
+    printf \"\033[2J\033[3J\033[H\" > /dev/tty
+  '
+)+clear-selection"
 
 echo "=> Installing pkg-install to $DEST"
 sudo install -Dm755 "$TMP_DIR/pkg-install" "$DEST/pkg-install"
