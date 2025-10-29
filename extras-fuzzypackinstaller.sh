@@ -88,7 +88,23 @@ ensure_snapd() {
 
   echo "=> Installing snapd..."
   case "$PKG_MGR" in
-    pacman) sudo pacman -S --needed snapd ;;
+    pacman) 
+        if command -v paru >/dev/null 2>&1; then
+          paru -S --needed snapd
+        elif command -v yay >/dev/null 2>&1; then
+          yay -S --needed snapd
+        else
+          cat <<EOF
+WARNING: snapd is not in official repos on Arch/CachyOS and requires an AUR helper.
+- Install an AUR helper (paru or yay), then run:
+    paru -S snapd    # or: yay -S snapd
+- Or use your AUR picker:
+    pkg-aur-install   # search for "snapd"
+Skipping snap picker setup for now.
+EOF
+          return 1
+        fi
+        ;;
     apt)    sudo apt update -qq && sudo apt install -y snapd ;;
     dnf)    sudo dnf install -y snapd || true ;;
     yum)    sudo yum install -y snapd || true ;;
